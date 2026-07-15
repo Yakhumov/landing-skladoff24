@@ -50,6 +50,24 @@ tailwind.config = {
   .btn-primary:hover { background:#0044CC; transform:translateY(-1px); }
   .btn-primary:active { transform:translateY(0); }
   
+  /* Стили для неактивной кнопки */
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    background: #94a3b8 !important;
+    pointer-events: none;
+  }
+
+  /* Анимация для кнопки при активации */
+  .btn-primary:not(:disabled) {
+    transition: all 0.3s ease;
+  }
+  .btn-primary:not(:disabled):hover {
+    background: #0044CC;
+    transform: translateY(-1px);
+  }
+  
   .photo-placeholder { background: linear-gradient(135deg, #1a2a4a 0%, #2a4a8a 100%); position:relative; overflow:hidden; }
   .photo-placeholder::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
   
@@ -233,6 +251,63 @@ tailwind.config = {
   .grid-responsive-3 { grid-template-columns: 1fr; }
   @media (min-width: 640px) { .grid-responsive-3 { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1024px) { .grid-responsive-3 { grid-template-columns: 1fr 1fr 1fr; } }
+
+  /* Стили для уведомлений */
+  .toast-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 16px 24px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s ease;
+    max-width: 90%;
+  }
+  .toast-message.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .toast-message.success { background: #10B981; }
+  .toast-message.error { background: #EF4444; }
+  .toast-message.info { background: #0055FF; }
+
+  /* Анимация загрузки */
+  .btn-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s ease-in-out infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Стили для поля телефона */
+  #phone-input {
+    letter-spacing: 0.5px;
+  }
+  #phone-input::placeholder {
+    letter-spacing: 0;
+  }
 </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -329,11 +404,11 @@ tailwind.config = {
             </div>
             <div class="stat-block bg-white/15 backdrop-blur rounded-md xs:rounded-lg p-1 xs:p-1.5 sm:p-2 md:p-3 border border-white/20">
               <div class="stat-label text-white/70 text-[0.35rem] xs:text-[0.4rem] sm:text-[0.5rem] md:text-xs">Окупаемость</div>
-              <div class="stat-value text-white font-black text-[0.6rem] xs:text-[0.7rem] sm:text-sm md:text-base lg:text-lg">20 мес.</div>
+              <div class="stat-value text-white font-black text-[0.6rem] xs:text-[0.7rem] sm:text-sm md:text-base lg:text-lg">6 мес.</div>
             </div>
             <div class="stat-block bg-white/15 backdrop-blur rounded-md xs:rounded-lg p-1 xs:p-1.5 sm:p-2 md:p-3 border border-white/20">
               <div class="stat-label text-white/70 text-[0.35rem] xs:text-[0.4rem] sm:text-[0.5rem] md:text-xs">Доходность</div>
-              <div class="stat-value font-black text-[0.6rem] xs:text-[0.7rem] sm:text-sm md:text-base lg:text-lg" style="color:#0055FF">58%</div>
+              <div class="stat-value text-white font-black text-[0.6rem] xs:text-[0.7rem] sm:text-sm md:text-base lg:text-lg">58%.</div>
             </div>
           </div>
           <div class="absolute top-1.5 xs:top-2 sm:top-3 right-1.5 xs:right-2 sm:right-3 bg-white/90 rounded-md xs:rounded-lg px-1.5 xs:px-2 sm:px-3 py-0.5 xs:py-1 sm:py-2">
@@ -563,7 +638,7 @@ tailwind.config = {
               <div class="grid grid-cols-2 gap-1.5 xs:gap-2 sm:gap-3">
                 <div class="bg-white rounded-xl xs:rounded-2xl p-2 xs:p-3 sm:p-4 card-shadow">
                   <div class="text-[0.4rem] xs:text-[0.45rem] sm:text-xs text-gray-500 mb-0.5 xs:mb-1">Окупаемость</div>
-                  <div class="text-base xs:text-lg sm:text-xl md:text-2xl font-black text-gray-800" id="calc-payback">20 мес.</div>
+                  <div class="text-base xs:text-lg sm:text-xl md:text-2xl font-black text-gray-800" id="calc-payback">6 мес.</div>
                 </div>
                 <div class="bg-white rounded-xl xs:rounded-2xl p-2 xs:p-3 sm:p-4 card-shadow">
                   <div class="text-[0.4rem] xs:text-[0.45rem] sm:text-xs text-gray-500 mb-0.5 xs:mb-1">Доходность годовых</div>
@@ -580,7 +655,7 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ===== ECONOMICS TABLE ===== -->
+<!-- ===== ECONOMICS TABLE & LEAD FORM ===== -->
 <section class="section-padding bg-white" id="economics">
   <div class="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 text-center">
     <h2 class="text-base xs:text-lg sm:text-xl md:text-2xl font-medium mb-4 xs:mb-6 sm:mb-8 md:mb-12 lg:mb-16" style="color:#70839F">Экономика модели на примере объектов сети</h2>
@@ -623,63 +698,97 @@ tailwind.config = {
       Мы в нём живём.
     </p>
 
-    <form id="lead-form" action="https://formsubmit.co/skladoff24@gmail.com" method="POST" onsubmit="handleSubmit(event)" class="mt-6 xs:mt-8 sm:mt-10 max-w-3xl mx-auto text-left">
+    <form id="lead-form" class="mt-6 xs:mt-8 sm:mt-10 max-w-3xl mx-auto text-left" onsubmit="submitForm(event)">
+      <!-- Скрытые поля для FormSubmit -->
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_subject" value="🔥 НОВАЯ ЗАЯВКА ПО ФРАНШИЗЕ SKLADOFF 24">
+      <input type="hidden" name="_language" value="ru">
+      <input type="hidden" name="_blacklist" value="spam, abuse">
+      
       <p class="text-sm xs:text-base sm:text-lg md:text-xl font-medium mb-3 xs:mb-4 sm:mb-6" style="color:#637896">
         Введите номер, чтобы получить расчёт Вашей финансовой модели и консультацию
       </p>
-      <input type="hidden" name="name" value="Заявка из блока экономики">
-      <input type="hidden" name="_subject" value="Заявка на расчёт финансовой модели">
 
       <div class="bg-white rounded-xl xs:rounded-2xl md:rounded-3xl card-shadow-lg border border-gray-100 p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8">
+        <!-- ФИО -->
+        <div class="mb-3 xs:mb-4 sm:mb-5">
+          <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-1.5 xs:mb-2">👤 Ваше имя <span class="text-red-500">*</span></label>
+          <input type="text" id="user-name" name="Имя клиента" required placeholder="Иван Иванов" class="w-full px-2.5 xs:px-3 sm:px-4 md:px-5 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl border border-gray-200 text-sm xs:text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:border-blue-500">
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3 xs:mb-4 sm:mb-5">
+          <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-1.5 xs:mb-2">📧 Email <span class="text-red-500">*</span></label>
+          <input type="email" id="user-email" name="Email клиента" required placeholder="example@mail.ru" class="w-full px-2.5 xs:px-3 sm:px-4 md:px-5 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl border border-gray-200 text-sm xs:text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:border-blue-500">
+        </div>
+
+        <!-- Есть ли помещение? -->
         <div class="mb-3 xs:mb-4 sm:mb-6">
-          <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-2 xs:mb-3">Есть ли у Вас помещение?</label>
+          <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-2 xs:mb-3">🏠 Есть ли у Вас помещение?</label>
           <div class="grid grid-cols-2 gap-1.5 xs:gap-2 sm:gap-3">
             <label class="cursor-pointer">
-              <input type="radio" name="has_property" value="Есть помещение" class="sr-only" checked onchange="toggleLeadFields()">
-              <div class="lead-radio-btn px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all" style="border-color:#0055FF;background:#EFF6FF;color:#0055FF">Да, помещение есть</div>
+              <input type="radio" name="Наличие помещения" value="✅ Да, есть своё помещение" class="sr-only" checked onchange="toggleLeadFields()">
+              <div class="lead-radio-btn px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all" style="border-color:#0055FF;background:#EFF6FF;color:#0055FF">✅ Да, помещение есть</div>
             </label>
             <label class="cursor-pointer">
-              <input type="radio" name="has_property" value="Нет помещения" class="sr-only" onchange="toggleLeadFields()">
-              <div class="lead-radio-btn px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">Нет помещения</div>
+              <input type="radio" name="Наличие помещения" value="❌ Нет помещения, ищу" class="sr-only" onchange="toggleLeadFields()">
+              <div class="lead-radio-btn px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">❌ Нет помещения</div>
             </label>
           </div>
         </div>
 
+        <!-- Поля для помещения -->
         <div id="property-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-2 xs:gap-3 sm:gap-4 mb-3 xs:mb-4">
           <div>
-            <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-1 xs:mb-2">Площадь помещения</label>
-            <input type="text" name="area" data-property-field placeholder="Например, 750 м²" class="w-full px-2.5 xs:px-3 sm:px-4 md:px-5 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl border border-gray-200 text-sm xs:text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:border-blue-500">
+            <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-1 xs:mb-2">📐 Площадь помещения (м²)</label>
+            <input type="text" name="Площадь помещения" data-property-field placeholder="Например, 750 м²" class="w-full px-2.5 xs:px-3 sm:px-4 md:px-5 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl border border-gray-200 text-sm xs:text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:border-blue-500">
           </div>
           <div>
-            <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-1 xs:mb-2">Город</label>
-            <input type="text" name="city" data-property-field placeholder="Например, Москва" class="w-full px-2.5 xs:px-3 sm:px-4 md:px-5 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl border border-gray-200 text-sm xs:text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:border-blue-500">
+            <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-1 xs:mb-2">📍 Город</label>
+            <input type="text" name="Город расположения" data-property-field placeholder="Например, Москва" class="w-full px-2.5 xs:px-3 sm:px-4 md:px-5 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl border border-gray-200 text-sm xs:text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:border-blue-500">
           </div>
         </div>
 
+        <!-- Интересы (для тех у кого нет помещения) -->
         <div id="interest-fields" class="hidden mb-3 xs:mb-4">
-          <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-2 xs:mb-3">Что интересует больше всего?</label>
+          <label class="block text-xs xs:text-sm font-semibold text-gray-700 mb-2 xs:mb-3">🎯 Что интересует больше всего?</label>
           <div class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-1.5 xs:gap-2 sm:gap-3">
             <label class="cursor-pointer">
-              <input type="radio" name="interest" value="Увеличение дохода" class="sr-only" data-interest-field onchange="toggleLeadFields()">
-              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">Увеличение дохода</div>
+              <input type="radio" name="Интерес" value="💰 Увеличение дохода" class="sr-only" data-interest-field onchange="toggleLeadFields()">
+              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">💰 Увеличение дохода</div>
             </label>
             <label class="cursor-pointer">
-              <input type="radio" name="interest" value="Инвестиции" class="sr-only" data-interest-field onchange="toggleLeadFields()">
-              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">Инвестиции</div>
+              <input type="radio" name="Интерес" value="📈 Инвестиции в готовый бизнес" class="sr-only" data-interest-field onchange="toggleLeadFields()">
+              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">📈 Инвестиции</div>
             </label>
             <label class="cursor-pointer">
-              <input type="radio" name="interest" value="Пассивное участие в бизнесе" class="sr-only" data-interest-field onchange="toggleLeadFields()">
-              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">Пассивное участие</div>
+              <input type="radio" name="Интерес" value="😌 Пассивное участие в бизнесе" class="sr-only" data-interest-field onchange="toggleLeadFields()">
+              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">😌 Пассивное участие</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="Интерес" value="🔍 Поиск помещения под склад" class="sr-only" data-interest-field onchange="toggleLeadFields()">
+              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">🔍 Поиск помещения</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="Интерес" value="🤖 Автоматизация склада" class="sr-only" data-interest-field onchange="toggleLeadFields()">
+              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">🤖 Автоматизация</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="Интерес" value="❓ Другое" class="sr-only" data-interest-field onchange="toggleLeadFields()">
+              <div class="interest-radio-btn px-1.5 xs:px-2 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 md:py-3 rounded-lg xs:rounded-xl border-2 text-center text-[0.6rem] xs:text-xs sm:text-sm font-semibold transition-all border-gray-200 text-gray-500 bg-white">❓ Другое</div>
             </label>
           </div>
         </div>
 
+        <!-- Телефон -->
         <div class="flex flex-col xs:flex-row gap-2 xs:gap-3">
-          <input type="tel" id="phone-input" name="phone" required placeholder="+7 (___) ___-__-__" class="w-full px-2.5 xs:px-3 sm:px-4 md:px-5 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl border border-gray-200 text-sm xs:text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:border-blue-500">
-          <button type="submit" class="btn-primary px-4 xs:px-5 sm:px-6 md:px-8 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl font-bold text-sm xs:text-base whitespace-nowrap">Получить расчёт</button>
+          <input type="tel" id="phone-input" name="📱 Номер телефона" required placeholder="+7 (___) ___-__-__" class="w-full px-2.5 xs:px-3 sm:px-4 md:px-5 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl border border-gray-200 text-sm xs:text-base text-gray-800 bg-white focus:outline-none focus:ring-2 focus:border-blue-500" autocomplete="tel">
+          <button type="submit" id="submit-btn" class="btn-primary px-4 xs:px-5 sm:px-6 md:px-8 py-2 xs:py-2.5 sm:py-3 md:py-4 rounded-lg xs:rounded-xl font-bold text-sm xs:text-base whitespace-nowrap" disabled>🚀 Получить расчёт</button>
         </div>
+        
         <label class="mt-3 xs:mt-4 flex items-start gap-1.5 xs:gap-2 sm:gap-3 text-[0.6rem] xs:text-xs sm:text-sm leading-relaxed text-gray-500">
-          <input type="checkbox" name="personal_data_agreement" value="Согласие получено" required class="mt-0.5 w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 rounded border-gray-300 flex-shrink-0" style="accent-color:#0055FF">
+          <input type="checkbox" id="consent-checkbox" name="✅ Согласие на обработку данных" value="Да" required class="mt-0.5 w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 rounded border-gray-300 flex-shrink-0" style="accent-color:#0055FF">
           <span>Согласен(на) на обработку персональных данных</span>
         </label>
       </div>
@@ -732,6 +841,9 @@ tailwind.config = {
   </div>
 </footer>
 
+<!-- ===== TOAST УВЕДОМЛЕНИЕ ===== -->
+<div id="toast-message" class="toast-message"></div>
+
 <script>
 // ===== BURGER MENU =====
 function toggleMenu() {
@@ -740,6 +852,15 @@ function toggleMenu() {
 }
 function closeMenu() {
   document.getElementById('mobile-menu').classList.add('hidden');
+}
+
+// ===== TOAST УВЕДОМЛЕНИЯ =====
+function showToast(message, type = 'success') {
+  const toast = document.getElementById('toast-message');
+  toast.textContent = message;
+  toast.className = 'toast-message ' + type;
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 5000);
 }
 
 // ===== CALCULATOR =====
@@ -751,20 +872,25 @@ function updateCalc() {
   const propType = document.querySelector('input[name="prop-type"]:checked')?.value || 'own';
   const pkg = document.querySelector('input[name="pkg-type"]:checked')?.value || 'start';
 
-  let rate = 750;
-  if (area > 1000 && area <= 2000) rate = 650;
-  else if (area > 2000) rate = 550;
+  let baseRate = 750;
+  if (area > 2000) baseRate = 550;
+  else if (area > 1000) baseRate = 650;
+  else if (area > 500) baseRate = 750;
+  else baseRate = 850;
 
-  const cityMult = city === 'moscow' ? 1.15 : 1.0;
-  const typeMult = propType === 'own' ? 1.3 : 1.0;
-  const pkgMult = pkg === 'full' ? 1.1 : 1.0;
+  const cityMult = city === 'moscow' ? 1.2 : 1.0;
+  const typeMult = propType === 'own' ? 1.0 : 0.7;
+  const pkgMult = pkg === 'full' ? 1.15 : 1.0;
 
-  const monthlyProfit = Math.round(area * rate * cityMult * typeMult * pkgMult);
-  const costPerM2 = pkg === 'full' ? 9900 : 7000;
+  const monthlyRevenue = Math.round(area * baseRate * cityMult);
+  const monthlyExpenses = Math.round(monthlyRevenue * 0.25);
+  const monthlyProfit = Math.round((monthlyRevenue - monthlyExpenses) * typeMult * pkgMult);
+
+  const costPerM2 = pkg === 'full' ? 12000 : 7500;
   const investment = area * costPerM2;
 
-  const paybackMonths = Math.round(investment / monthlyProfit);
-  const annualYield = Math.round((monthlyProfit * 12 / investment) * 100);
+  const paybackMonths = investment > 0 && monthlyProfit > 0 ? Math.round(investment / monthlyProfit) : 0;
+  const annualYield = investment > 0 && monthlyProfit > 0 ? Math.round((monthlyProfit * 12 / investment) * 100) : 0;
 
   document.querySelectorAll('.calc-radio-btn').forEach(el => {
     el.style.borderColor = '#E5E7EB';
@@ -774,32 +900,181 @@ function updateCalc() {
   document.querySelectorAll('input[name="prop-type"], input[name="pkg-type"]').forEach(radio => {
     if (radio.checked) {
       const btn = radio.nextElementSibling;
-      btn.style.borderColor = '#0055FF';
-      btn.style.background = '#EFF6FF';
-      btn.style.color = '#0055FF';
+      if (btn) {
+        btn.style.borderColor = '#0055FF';
+        btn.style.background = '#EFF6FF';
+        btn.style.color = '#0055FF';
+      }
     }
   });
 
   document.getElementById('calc-profit').textContent = monthlyProfit.toLocaleString('ru-RU') + ' ₽';
-  document.getElementById('calc-payback').textContent = paybackMonths + ' мес.';
-  document.getElementById('calc-yield').textContent = annualYield + '%';
+  document.getElementById('calc-payback').textContent = paybackMonths > 0 ? paybackMonths + ' мес.' : '—';
+  document.getElementById('calc-yield').textContent = annualYield > 0 ? annualYield + '%' : '—';
 }
 
-// ===== PHONE MASK =====
+// ===== PHONE MASK (исправленная и стабильная) =====
 document.getElementById('phone-input').addEventListener('input', function(e) {
-  let val = e.target.value.replace(/\D/g, '');
-  if (val.startsWith('8')) val = '7' + val.slice(1);
-  if (!val.startsWith('7') && val.length > 0) val = '7' + val;
+  // Удаляем все нецифровые символы
+  let val = this.value.replace(/\D/g, '');
+  
+  // Если номер пустой, выходим
+  if (val.length === 0) {
+    this.value = '';
+    return;
+  }
+  
+  // Если начинается с 8, заменяем на 7
+  if (val.startsWith('8')) {
+    val = '7' + val.slice(1);
+  }
+  
+  // Если не начинается с 7, добавляем 7
+  if (!val.startsWith('7') && val.length > 0) {
+    val = '7' + val;
+  }
+  
+  // Ограничиваем длину 11 цифрами
   val = val.slice(0, 11);
+  
+  // Форматируем номер
   let formatted = '';
-  if (val.length >= 1) formatted = '+7';
-  if (val.length >= 2) formatted += ' (' + val.slice(1, 4);
-  if (val.length >= 4) formatted += (val.length >= 4 ? '' : '');
-  if (val.length > 4) formatted += ') ' + val.slice(4, 7);
-  if (val.length > 7) formatted += '-' + val.slice(7, 9);
-  if (val.length > 9) formatted += '-' + val.slice(9, 11);
-  e.target.value = formatted;
+  if (val.length >= 1) {
+    formatted = '+7';
+  }
+  if (val.length >= 2) {
+    formatted += ' (';
+    formatted += val.slice(1, 4);
+  }
+  if (val.length >= 4) {
+    formatted += ') ';
+    formatted += val.slice(4, 7);
+  }
+  if (val.length >= 7) {
+    formatted += '-';
+    formatted += val.slice(7, 9);
+  }
+  if (val.length >= 9) {
+    formatted += '-';
+    formatted += val.slice(9, 11);
+  }
+  
+  this.value = formatted;
 });
+
+// Обработка клавиш Backspace и Delete
+document.getElementById('phone-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace' || e.key === 'Delete') {
+    const selectionStart = this.selectionStart;
+    const selectionEnd = this.selectionEnd;
+    
+    // Если выделен весь текст, очищаем полностью
+    if (selectionStart === 0 && selectionEnd === this.value.length) {
+      this.value = '';
+      e.preventDefault();
+      return;
+    }
+    
+    // Если курсор в начале, не даём удалять +7
+    if (selectionStart <= 2) {
+      e.preventDefault();
+      return;
+    }
+    
+    // Сохраняем позицию курсора после удаления
+    setTimeout(() => {
+      const newPos = Math.max(2, selectionStart - 1);
+      this.setSelectionRange(newPos, newPos);
+    }, 0);
+  }
+});
+
+// Обработка вставки из буфера обмена
+document.getElementById('phone-input').addEventListener('paste', function(e) {
+  e.preventDefault();
+  const pasteData = (e.clipboardData || window.clipboardData).getData('text');
+  const numbers = pasteData.replace(/\D/g, '');
+  
+  if (numbers.length > 0) {
+    let clean = numbers;
+    if (clean.startsWith('8')) clean = '7' + clean.slice(1);
+    if (!clean.startsWith('7')) clean = '7' + clean;
+    clean = clean.slice(0, 11);
+    
+    let formatted = '+7';
+    if (clean.length >= 2) {
+      formatted += ' (' + clean.slice(1, 4);
+    }
+    if (clean.length >= 4) {
+      formatted += ') ' + clean.slice(4, 7);
+    }
+    if (clean.length >= 7) {
+      formatted += '-' + clean.slice(7, 9);
+    }
+    if (clean.length >= 9) {
+      formatted += '-' + clean.slice(9, 11);
+    }
+    this.value = formatted;
+    
+    // Устанавливаем курсор в конец
+    const newPos = this.value.length;
+    setTimeout(() => this.setSelectionRange(newPos, newPos), 0);
+  }
+});
+
+// Фокусировка на поле телефона - установка курсора в конец
+document.getElementById('phone-input').addEventListener('focus', function() {
+  if (this.value.length > 0) {
+    this.setSelectionRange(this.value.length, this.value.length);
+  }
+});
+
+// ===== УПРАВЛЕНИЕ КНОПКОЙ ОТПРАВКИ =====
+(function() {
+  const submitBtn = document.getElementById('submit-btn');
+  const consentCheckbox = document.getElementById('consent-checkbox');
+  
+  function updateSubmitButton() {
+    if (!consentCheckbox || !submitBtn) return;
+    
+    if (consentCheckbox.checked) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.style.cursor = 'pointer';
+      submitBtn.style.background = '#0055FF';
+    } else {
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.5';
+      submitBtn.style.cursor = 'not-allowed';
+      submitBtn.style.background = '#94a3b8';
+    }
+  }
+
+  // Инициализация при загрузке
+  updateSubmitButton();
+
+  // Обработчики изменения чекбокса
+  if (consentCheckbox) {
+    consentCheckbox.addEventListener('change', updateSubmitButton);
+    consentCheckbox.addEventListener('click', function() {
+      setTimeout(updateSubmitButton, 10);
+    });
+  }
+
+  // Обновляем после сброса формы
+  document.getElementById('lead-form')?.addEventListener('reset', function() {
+    setTimeout(updateSubmitButton, 50);
+  });
+
+  // Также следим за изменениями в DOM (на случай динамического изменения)
+  const observer = new MutationObserver(function() {
+    updateSubmitButton();
+  });
+  
+  if (consentCheckbox) {
+    observer.observe(consentCheckbox, { attributes: true, attributeFilter: ['checked'] });
+  }
+})();
 
 // ===== LEAD FORM =====
 function setOptionButtonState(selector, activeInput) {
@@ -810,19 +1085,25 @@ function setOptionButtonState(selector, activeInput) {
   });
   if (activeInput?.nextElementSibling) {
     const btn = activeInput.nextElementSibling;
-    btn.style.borderColor = '#0055FF';
-    btn.style.background = '#EFF6FF';
-    btn.style.color = '#0055FF';
+    if (btn && btn.classList.contains('lead-radio-btn') || btn.classList.contains('interest-radio-btn')) {
+      btn.style.borderColor = '#0055FF';
+      btn.style.background = '#EFF6FF';
+      btn.style.color = '#0055FF';
+    }
   }
 }
 
 function toggleLeadFields() {
-  const hasProperty = document.querySelector('input[name="has_property"]:checked')?.value === 'Есть помещение';
+  const hasProperty = document.querySelector('input[name="Наличие помещения"]:checked')?.value === '✅ Да, есть своё помещение';
   const propertyFields = document.getElementById('property-fields');
   const interestFields = document.getElementById('interest-fields');
 
-  propertyFields.classList.toggle('hidden', !hasProperty);
-  interestFields.classList.toggle('hidden', hasProperty);
+  if (propertyFields) {
+    propertyFields.classList.toggle('hidden', !hasProperty);
+  }
+  if (interestFields) {
+    interestFields.classList.toggle('hidden', hasProperty);
+  }
 
   document.querySelectorAll('[data-property-field]').forEach(field => {
     field.required = hasProperty;
@@ -833,20 +1114,145 @@ function toggleLeadFields() {
     if (hasProperty) field.checked = false;
   });
 
-  setOptionButtonState('.lead-radio-btn', document.querySelector('input[name="has_property"]:checked'));
-  setOptionButtonState('.interest-radio-btn', document.querySelector('input[name="interest"]:checked'));
+  // Обновляем стили для радио-кнопок
+  setOptionButtonState('.lead-radio-btn', document.querySelector('input[name="Наличие помещения"]:checked'));
+  setOptionButtonState('.interest-radio-btn', document.querySelector('input[name="Интерес"]:checked'));
 }
 
-// ===== FORM SUBMIT =====
-function handleSubmit(e) {
-  const name = e.target.querySelector('input[name="name"]').value;
-  const phone = e.target.querySelector('input[name="phone"]').value;
-  const hasProperty = e.target.querySelector('input[name="has_property"]:checked')?.value;
-  const area = e.target.querySelector('input[name="area"]')?.value;
-  const city = e.target.querySelector('input[name="city"]')?.value;
-  const interest = e.target.querySelector('input[name="interest"]:checked')?.value;
-  console.log('[SKLADOFF 24] Новая заявка:', { name, phone, hasProperty, area, city, interest });
+// ===== ОТПРАВКА ФОРМЫ (FormSubmit - исправленный) =====
+async function submitForm(event) {
+  event.preventDefault();
+  
+  const form = event.target;
+  const submitBtn = document.getElementById('submit-btn');
+  
+  // Валидация имени
+  const nameInput = document.getElementById('user-name');
+  if (nameInput.value.trim().length < 2) {
+    showToast('Пожалуйста, введите ваше имя', 'error');
+    nameInput.focus();
+    return;
+  }
+
+  // Валидация email
+  const emailInput = document.getElementById('user-email');
+  const email = emailInput.value.trim();
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    showToast('Пожалуйста, введите корректный Email', 'error');
+    emailInput.focus();
+    return;
+  }
+
+  // Валидация телефона
+  const phoneInput = document.getElementById('phone-input');
+  const phoneRaw = phoneInput.value.replace(/\D/g, '');
+  if (phoneRaw.length < 10) {
+    showToast('Пожалуйста, введите корректный номер телефона', 'error');
+    phoneInput.focus();
+    return;
+  }
+
+  // Проверка согласия
+  const consent = form.querySelector('input[name="✅ Согласие на обработку данных"]');
+  if (!consent.checked) {
+    showToast('Пожалуйста, дайте согласие на обработку персональных данных', 'error');
+    return;
+  }
+
+  // Блокируем кнопку
+  submitBtn.classList.add('btn-loading');
+  submitBtn.textContent = 'Отправка...';
+
+  // Собираем данные
+  const formData = new FormData(form);
+  const data = {};
+  
+  for (let [key, value] of formData.entries()) {
+    // Очищаем key от эмодзи для чистоты данных
+    const cleanKey = key.replace(/[^\w\sа-яА-Я]/g, '').trim();
+    data[cleanKey || key] = value;
+  }
+  
+  // Добавляем данные с калькулятора
+  const area = document.getElementById('area-range').value;
+  const profit = document.getElementById('calc-profit').textContent;
+  const payback = document.getElementById('calc-payback').textContent;
+  const yield_ = document.getElementById('calc-yield').textContent;
+  
+  data['📊 Данные калькулятора'] = `Площадь: ${area} м² | Прибыль: ${profit} | Окупаемость: ${payback} | Доходность: ${yield_}`;
+  data['📌 Тип заявки'] = 'Заявка по франшизе SKLADOFF 24';
+  data['🕐 Дата и время'] = new Date().toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'Europe/Moscow'
+  });
+
+  // Формируем красивое сообщение для письма
+  const message = `
+🔥 НОВАЯ ЗАЯВКА ПО ФРАНШИЗЕ SKLADOFF 24
+${'='.repeat(50)}
+
+👤 Имя клиента: ${data['Имя клиента'] || 'Не указано'}
+📧 Email: ${data['Email клиента'] || 'Не указан'}
+📱 Телефон: ${data['Номер телефона'] || 'Не указан'}
+
+🏠 Наличие помещения: ${data['Наличие помещения'] || 'Не указано'}
+${data['Наличие помещения']?.includes('Да') ? `
+📐 Площадь: ${data['Площадь помещения'] || 'Не указана'}
+📍 Город: ${data['Город расположения'] || 'Не указан'}
+` : ''}
+${data['Интерес'] ? `🎯 Интерес: ${data['Интерес']}` : ''}
+
+${'─'.repeat(50)}
+📊 ДАННЫЕ КАЛЬКУЛЯТОРА:
+${data['📊 Данные калькулятора']}
+
+📌 Тип заявки: ${data['📌 Тип заявки']}
+🕐 Дата и время: ${data['🕐 Дата и время']}
+
+${'='.repeat(50)}
+✅ Согласие на обработку данных: ${data['Согласие на обработку данных'] || 'Не указано'}
+  `;
+
+  // Добавляем сообщение в данные
+  data['_message'] = message;
+
+  try {
+    const response = await fetch('https://formsubmit.co/ajax/skladoff24@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      showToast('✅ Заявка успешно отправлена! Менеджер свяжется с вами в ближайшее время.', 'success');
+      form.reset();
+      document.querySelector('input[name="Наличие помещения"][value="✅ Да, есть своё помещение"]').checked = true;
+      toggleLeadFields();
+      document.getElementById('phone-input').value = '';
+      // Кнопка будет автоматически обновлена через MutationObserver
+    } else {
+      showToast('❌ Ошибка отправки. Пожалуйста, попробуйте ещё раз.', 'error');
+    }
+  } catch (error) {
+    console.error('Ошибка:', error);
+    showToast('❌ Ошибка соединения. Проверьте интернет и попробуйте снова.', 'error');
+  }
+
+  submitBtn.classList.remove('btn-loading');
+  submitBtn.textContent = '🚀 Получить расчёт';
 }
+
+
 
 // ===== INIT =====
 updateCalc();
@@ -856,15 +1262,60 @@ toggleLeadFields();
 document.addEventListener('click', function(e) {
   const menu = document.getElementById('mobile-menu');
   const burger = document.getElementById('burger-btn');
-  if (!menu.classList.contains('hidden') && !menu.contains(e.target) && !burger.contains(e.target)) {
+  if (menu && burger && !menu.classList.contains('hidden') && !menu.contains(e.target) && !burger.contains(e.target)) {
     closeMenu();
   }
 });
 
-// Адаптация под ориентацию экрана
+// Обновляем калькулятор при изменении размера окна
+let resizeTimer;
 window.addEventListener('resize', function() {
-  // Принудительно обновляем калькулятор при изменении размера окна
-  updateCalc();
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(updateCalc, 200);
+});
+
+// Клик по радио-кнопкам в форме для обновления стилей
+document.querySelectorAll('.lead-radio-btn, .interest-radio-btn').forEach(btn => {
+  const radio = btn.closest('label')?.querySelector('input[type="radio"]');
+  if (radio) {
+    radio.addEventListener('change', function() {
+      if (this.checked) {
+        const parent = this.closest('label');
+        if (parent) {
+          const div = parent.querySelector('.lead-radio-btn, .interest-radio-btn');
+          if (div) {
+            div.style.borderColor = '#0055FF';
+            div.style.background = '#EFF6FF';
+            div.style.color = '#0055FF';
+          }
+        }
+        const name = this.name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach(other => {
+          if (other !== this) {
+            const otherParent = other.closest('label');
+            if (otherParent) {
+              const otherDiv = otherParent.querySelector('.lead-radio-btn, .interest-radio-btn');
+              if (otherDiv) {
+                otherDiv.style.borderColor = '#E5E7EB';
+                otherDiv.style.background = 'white';
+                otherDiv.style.color = '#6B7280';
+              }
+            }
+          }
+        });
+        if (this.name === 'has_property') {
+          toggleLeadFields();
+        }
+      }
+    });
+  }
+});
+
+// Дополнительная очистка поля телефона при отправке
+document.getElementById('lead-form').addEventListener('submit', function() {
+  const phoneInput = document.getElementById('phone-input');
+  // Удаляем все пробелы и скобки для отправки
+  phoneInput.value = phoneInput.value.replace(/[\s()\-]/g, '');
 });
 </script>
 
